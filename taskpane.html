@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>報價單操作面板</title>
+<script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+<script src="config.js"></script>
+<style>
+:root{--navy:#1f3a5f;--navy2:#2c5282;--bg:#f4f6f9;--line:#e2e8f0;--text:#2d3748;--muted:#718096;--red:#c53030;--amber:#b45309;--amberbg:#fffbeb}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Microsoft JhengHei","Noto Sans TC",Roboto,Arial,sans-serif;font-size:13px;color:var(--text);background:var(--bg);padding:2px 0 60px}
+section{background:#fff;margin:10px;border:1px solid var(--line);border-radius:12px;padding:12px 14px;box-shadow:0 1px 2px rgba(15,23,42,.04),0 2px 6px rgba(15,23,42,.04)}
+h2{font-size:13px;color:var(--navy);margin:0 0 10px;font-weight:700;display:flex;justify-content:space-between;align-items:center;border-left:3px solid var(--navy2);padding-left:8px;line-height:1.3}
+h2 small{font-weight:400;color:var(--muted)}
+.btn{display:flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line);background:#fff;color:var(--text);border-radius:8px;padding:9px 10px;font-size:13px;cursor:pointer;font-family:inherit;transition:background .15s,color .15s,border-color .15s;width:100%;white-space:nowrap}
+.btn:hover{background:#edf2f7}
+.btn.primary{background:var(--navy);border-color:var(--navy);color:#fff}
+.btn.primary:hover{background:var(--navy2)}
+.btn.armed{background:var(--red);border-color:var(--red);color:#fff}
+.item{display:flex;align-items:flex-start;gap:4px;padding:8px 6px 8px 8px;border:1px solid var(--line);border-radius:8px;margin-bottom:6px;transition:border-color .15s}
+.item:hover{border-color:#a0aec0}
+.no{width:20px;height:20px;border-radius:50%;background:#edf2f7;color:var(--muted);font-size:11px;display:flex;align-items:center;justify-content:center;flex:none;margin:1px 4px 0 0}
+.info{flex:1;min-width:0;cursor:pointer}
+.svc{line-height:1.4;word-break:break-all}
+.sub{font-size:11px;color:var(--muted);margin-top:2px;word-break:break-all}
+.empty{color:#a0aec0}
+.icons{display:flex;flex:none}
+.icon{border:none;background:none;cursor:pointer;color:var(--muted);font-size:12px;width:24px;height:24px;border-radius:6px;flex:none;font-family:inherit;padding:0}
+.icon:hover{background:#edf2f7;color:var(--text)}
+.icon:disabled{opacity:.25;cursor:default;background:none}
+.icon.del:hover,.icon.armed{background:#fed7d7;color:var(--red)}
+.row{display:flex;gap:6px;margin:4px 0 10px}
+select,input.txt{font-family:inherit;font-size:13px;border:1px solid var(--line);border-radius:8px;padding:7px 8px;background:#fff;color:var(--text);min-width:0}
+.row select,.row input.txt{flex:1}
+.row .btn{width:auto;padding:7px 12px}
+.total{display:flex;justify-content:space-between;font-weight:600;padding:4px 2px 2px;font-size:14px}
+.total span:last-child{color:var(--navy)}
+.upper{font-size:11px;color:var(--muted);text-align:right;padding:0 2px 10px}
+.cur{font-size:11px;color:var(--muted);margin-top:10px;text-align:center;line-height:1.6}
+.cur a{color:var(--navy2);cursor:pointer}
+.pending{background:var(--amberbg);border-color:#fcd34d}
+.pending .ptop{display:flex;justify-content:space-between;align-items:center;color:var(--amber);font-size:12px}
+.pending .ptop a{color:var(--amber);cursor:pointer;text-decoration:underline;white-space:nowrap;margin-left:8px}
+.pitem{display:flex;justify-content:space-between;padding:6px 8px;margin-top:6px;background:#fff;border:1px solid #fde68a;border-radius:6px;cursor:pointer;font-size:12px}
+.pitem:hover{border-color:var(--amber)}
+.pitem b{color:var(--red);font-weight:600;white-space:nowrap;margin-left:8px}
+.chips{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:3px 10px;font-size:12px;cursor:pointer;color:var(--muted);font-family:inherit}
+.chip.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.search{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:13px;margin-bottom:8px;font-family:inherit;outline:none}
+.search:focus{border-color:var(--navy2)}
+.rec{border:1px solid var(--line);border-radius:8px;padding:9px 10px;margin-bottom:8px}
+.rec.on{border-color:var(--navy2);background:#f7faff}
+.rec .top{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.co{font-weight:600;word-break:break-all}
+.amt{color:var(--navy);font-weight:600;white-space:nowrap}
+.meta{font-size:11px;color:var(--muted);margin:3px 0}
+.svcs{font-size:12px;margin-bottom:8px;line-height:1.5}
+.acts{display:grid;grid-template-columns:minmax(0,1fr);gap:6px;align-items:center;margin-top:6px}
+.acts.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.acts.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+.acts .btn{padding:6px 4px;font-size:12px;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.acts select.st{width:100%;min-width:0}
+.files{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+.files a{font-size:11px;color:#065f46;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:999px;padding:2px 8px;text-decoration:none;cursor:pointer}
+.files a:hover{background:#d1fae5}
+.rec.drop{border:2px dashed var(--navy2);background:#f0f5ff}
+.logbox{margin-top:8px;border-top:1px dashed var(--line);padding-top:6px}
+.lg{padding:6px 0;border-bottom:1px solid var(--line);font-size:12px}
+.lg:last-child{border-bottom:none}
+.lg .lt{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:11px}
+.lg .lt b{color:var(--text);font-size:12px}
+.lg .ld{margin-top:2px;line-height:1.5;word-break:break-all}
+#recent{margin-top:8px}
+.linkbtn{background:none;border:none;color:var(--navy2);cursor:pointer;font-size:12px;font-family:inherit;padding:0}
+.linkbtn:hover{text-decoration:underline}
+.st{font-size:12px;padding:4px 6px;border-radius:6px;flex:none;font-weight:600}
+.st0{background:#fef3c7;color:#92400e;border-color:#fcd34d}
+.st1{background:#d1fae5;color:#065f46;border-color:#6ee7b7}
+.st2{background:#e5e7eb;color:#4b5563;border-color:#d1d5db}
+.hint{font-size:11px;color:var(--muted);margin:-2px 0 8px;line-height:1.6}
+details summary{cursor:pointer;font-size:13px;color:var(--navy);font-weight:700;list-style:none;display:flex;justify-content:space-between;border-left:3px solid var(--navy2);padding-left:8px;line-height:1.3}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:"展開 ▾";font-weight:400;font-size:12px;color:var(--muted)}
+details[open] summary::after{content:"收合 ▴"}
+.pfoot{text-align:center;font-size:11px;color:var(--muted);margin:14px 0 4px}
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:12px}
+th,td{padding:6px 4px;text-align:right;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--muted);font-weight:600}
+tfoot td{font-weight:600;border-bottom:none}
+.muted{color:var(--muted);font-size:12px;text-align:center;padding:12px 4px}
+#toast{position:fixed;left:10px;right:10px;bottom:10px;background:#2d3748;color:#fff;padding:10px 12px;border-radius:8px;font-size:12px;opacity:0;transform:translateY(8px);transition:.2s;pointer-events:none;z-index:10}
+#toast.show{opacity:1;transform:none}
+#toast.err{background:var(--red)}
+#bar{position:fixed;top:0;left:0;right:0;height:3px;overflow:hidden;opacity:0;transition:opacity .2s;z-index:9;pointer-events:none}
+#bar.on{opacity:1}
+#bar::before{content:"";position:absolute;top:0;left:-40%;width:40%;height:100%;background:var(--navy2);animation:slide 1s ease-in-out infinite}
+@keyframes slide{to{left:100%}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.btn.loading{pointer-events:none;opacity:.75}
+.btn.loading::after{content:"";width:11px;height:11px;border:2px solid rgba(128,128,128,.35);border-top-color:currentColor;border-radius:50%;animation:spin .7s linear infinite;flex:none}
+.item.temp{border-style:dashed;opacity:.7}
+.topbar{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 8px;background:#fff;border-bottom:1px solid var(--line);padding:8px 10px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.tb-info{font-size:11px;color:var(--muted);line-height:1.4;min-width:0;flex:1 1 90px}
+.tb-info b{color:var(--text);font-size:12px}
+.tb-btns{display:flex;gap:6px;margin-left:auto}
+.btn.sm{width:auto;padding:6px 9px;font-size:12px}
+#pdf:empty{display:none}
+#pdf{margin:8px 10px 0}
+.who{margin:8px 10px 0;border-radius:10px;padding:8px 10px;font-size:12px;line-height:1.7;background:#fff;border:1px solid var(--line)}
+.who a{color:var(--navy2);cursor:pointer}
+.who .cloud{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;color:var(--muted)}
+.who .cloud.ok{color:#065f46}
+.who .cloud.warn{color:#92400e}
+.who .btn{width:auto;padding:3px 10px;font-size:12px}
+.ask{margin:8px 10px 0;border:1px solid #fcd34d;background:var(--amberbg);border-radius:10px;padding:10px 12px;font-size:12px;color:#92400e;line-height:1.6}
+.ask b{display:block;font-size:13px;margin-bottom:2px}
+.ask .q{margin-top:4px;opacity:.85}
+.ask .acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.ask .acts .btn{width:auto;flex:1 1 auto;padding:6px 10px}
+.ask .acts.col{flex-direction:column;align-items:stretch}
+.tb-info .unsaved{color:var(--amber);font-weight:600}
+.btn.primary.dirty{background:var(--amber);border-color:var(--amber)}
+.btn.primary.dirty:hover{background:#92400e}
+.btn:active,.icon:active,.chip:active{transform:scale(.97)}
+.tools{display:grid;gap:8px;margin-top:10px}
+.fatal{margin:16px 10px;padding:14px;border-radius:10px;background:#fdecea;color:var(--red);line-height:1.7;font-size:13px}
+#main[hidden],#nameBox[hidden]{display:none}
+</style>
+</head><body>
+<div id="bar"></div>
+
+<section id="nameBox" hidden>
+  <h2>第一次使用</h2>
+  <div class="hint">請輸入你的名字。面板會替你建立自己的「報價單-名字」分頁，編輯紀錄也用這個名字。</div>
+  <div class="row"><input class="txt" id="nameInput" placeholder="例如：家緯" maxlength="20"><button class="btn primary" data-act="setname">開始</button></div>
+  <div class="hint" id="nameNote"></div>
+</section>
+
+<div id="fatal"></div>
+
+<div id="main" hidden>
+<div class="topbar">
+  <div class="tb-info" id="cur"></div>
+  <div class="tb-btns">
+    <button class="btn primary sm" data-act="save" title="儲存到報價紀錄">💾 儲存</button>
+    <button class="btn sm" data-act="pdf" title="匯出 PDF">📄 PDF</button>
+    <button class="btn sm" data-act="new" title="開新報價單">🧾 新報價</button>
+  </div>
+</div>
+<div class="who" id="who"></div>
+<div class="ask" id="ask" hidden></div>
+<div class="cur" id="pdf"></div>
+
+<section class="pending" id="pending" style="display:none"></section>
+
+<section>
+  <h2>服務項目 <button class="icon" data-act="refresh" title="重新整理">⟳</button></h2>
+  <div class="row">
+    <select id="pick"><option value="">＋ 加入服務或常用組合…</option></select>
+  </div>
+  <div id="items"><div class="muted">載入中…</div></div>
+  <div class="row" style="margin:0">
+    <button class="btn primary" data-act="add">＋ 新增服務項目</button>
+    <button class="btn" data-act="discount" style="flex:0 0 auto;width:auto;padding:9px 14px">－ 折扣</button>
+  </div>
+  <div id="sum" style="margin-top:10px"></div>
+</section>
+
+<section id="histBox">
+  <h2>歷史紀錄 <small id="count"></small></h2>
+  <div class="chips" id="chips">
+    <button class="chip on" data-act="filter" data-f="全部">全部</button>
+    <button class="chip" data-act="filter" data-f="待回覆">待回覆</button>
+    <button class="chip" data-act="filter" data-f="已回簽">已回簽</button>
+    <button class="chip" data-act="filter" data-f="婉拒">婉拒</button>
+  </div>
+  <input class="search" id="q" placeholder="搜尋公司、受信人、服務、編號…">
+  <div class="hint">「沿用」＝複製成新報價，年度自動 +1<br>
+    回簽掃描檔：按「📎 上傳回簽」，或把檔案直接拖到該筆紀錄上<br>
+    <button class="linkbtn" data-act="archive">📁 開啟 OneDrive 歸檔資料夾</button></div>
+  <div id="hist"><div class="muted">載入中…</div></div>
+  <input type="file" id="file" accept="application/pdf,image/*" style="display:none">
+</section>
+
+<section>
+  <details id="logBox">
+    <summary>最近編輯</summary>
+    <div id="recent"><div class="muted">載入中…</div></div>
+  </details>
+</section>
+
+<section>
+  <details id="statsBox">
+    <summary>報價統計</summary>
+    <div id="stats"></div>
+  </details>
+</section>
+
+<section>
+  <details>
+    <summary>其他</summary>
+    <div class="tools">
+      <button class="btn" data-act="goto">📝 跳到我的報價單分頁</button>
+      <button class="btn" data-act="rebuild" title="分頁版面亂掉時使用；報價紀錄不受影響">🛠 重建我的報價單分頁</button>
+      <button class="btn" data-act="rename" id="renameBtn" hidden>👤 換使用者名字</button>
+    </div>
+    <div class="hint" style="margin-top:8px">「重建」會清掉分頁上還沒儲存的內容，報價紀錄不受影響。<br>
+      服務項目、常用組合、有效天數、發信人、使用者名字都在「服務項目」工作表修改。</div>
+  </details>
+</section>
+</div>
+
+<div class="pfoot">宥鋐會計師事務所</div>
+
+<div id="toast"></div>
+<script src="taskpane.js"></script>
+</body></html>

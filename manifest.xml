@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+  xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
+  xsi:type="TaskPaneApp">
+  <Id>9145da1b-0abd-412c-8e61-2f1fc5d1f1e1</Id>
+  <Version>1.0.0.0</Version>
+  <ProviderName>宥鋐會計師事務所</ProviderName>
+  <DefaultLocale>zh-TW</DefaultLocale>
+  <DisplayName DefaultValue="報價單面板"/>
+  <Description DefaultValue="宥鋐會計師事務所報價單：製作、儲存、匯出 PDF、回簽歸檔到 OneDrive"/>
+  <IconUrl DefaultValue="https://yhcpa16-code.github.io/yh-quote/assets/icon-32.png"/>
+  <HighResolutionIconUrl DefaultValue="https://yhcpa16-code.github.io/yh-quote/assets/icon-64.png"/>
+  <SupportUrl DefaultValue="https://yhcpa16-code.github.io/yh-quote/taskpane.html"/>
+  <AppDomains>
+    <AppDomain>https://login.microsoftonline.com</AppDomain>
+  </AppDomains>
+  <Hosts>
+    <Host Name="Workbook"/>
+  </Hosts>
+  <Requirements>
+    <Sets DefaultMinVersion="1.1">
+      <Set Name="ExcelApi" MinVersion="1.14"/>
+    </Sets>
+  </Requirements>
+  <DefaultSettings>
+    <SourceLocation DefaultValue="https://yhcpa16-code.github.io/yh-quote/taskpane.html"/>
+  </DefaultSettings>
+  <Permissions>ReadWriteDocument</Permissions>
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="VersionOverridesV1_0">
+    <Hosts>
+      <Host xsi:type="Workbook">
+        <DesktopFormFactor>
+          <ExtensionPoint xsi:type="PrimaryCommandSurface">
+            <OfficeTab id="TabHome">
+              <Group id="YHQ.Group">
+                <Label resid="YHQ.Group.Label"/>
+                <Icon>
+                  <bt:Image size="16" resid="Icon.16"/>
+                  <bt:Image size="32" resid="Icon.32"/>
+                  <bt:Image size="80" resid="Icon.80"/>
+                </Icon>
+                <Control xsi:type="Button" id="YHQ.Open">
+                  <Label resid="YHQ.Open.Label"/>
+                  <Supertip>
+                    <Title resid="YHQ.Open.Label"/>
+                    <Description resid="YHQ.Open.Tip"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.16"/>
+                    <bt:Image size="32" resid="Icon.32"/>
+                    <bt:Image size="80" resid="Icon.80"/>
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <TaskpaneId>Office.AutoShowTaskpaneWithDocument</TaskpaneId>
+                    <SourceLocation resid="Taskpane.Url"/>
+                  </Action>
+                </Control>
+              </Group>
+            </OfficeTab>
+          </ExtensionPoint>
+        </DesktopFormFactor>
+      </Host>
+    </Hosts>
+    <Resources>
+      <bt:Images>
+        <bt:Image id="Icon.16" DefaultValue="https://yhcpa16-code.github.io/yh-quote/assets/icon-16.png"/>
+        <bt:Image id="Icon.32" DefaultValue="https://yhcpa16-code.github.io/yh-quote/assets/icon-32.png"/>
+        <bt:Image id="Icon.80" DefaultValue="https://yhcpa16-code.github.io/yh-quote/assets/icon-80.png"/>
+      </bt:Images>
+      <bt:Urls>
+        <bt:Url id="Taskpane.Url" DefaultValue="https://yhcpa16-code.github.io/yh-quote/taskpane.html"/>
+      </bt:Urls>
+      <bt:ShortStrings>
+        <bt:String id="YHQ.Group.Label" DefaultValue="宥鋐報價單"/>
+        <bt:String id="YHQ.Open.Label" DefaultValue="報價單面板"/>
+      </bt:ShortStrings>
+      <bt:LongStrings>
+        <bt:String id="YHQ.Open.Tip" DefaultValue="開啟報價單操作面板：加入服務、儲存報價、匯出 PDF、上傳回簽"/>
+      </bt:LongStrings>
+    </Resources>
+  </VersionOverrides>
+</OfficeApp>
