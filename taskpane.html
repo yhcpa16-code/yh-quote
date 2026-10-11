@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>報價單操作面板</title>
 <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
-<script src="config.js?v=mv3b3e3e"></script>
+<script src="config.js?v=mv3cdre6"></script>
 <style>
 :root{--navy:#1f3a5f;--navy2:#2c5282;--bg:#f4f6f9;--line:#e2e8f0;--text:#2d3748;--muted:#718096;--red:#c53030;--amber:#b45309;--amberbg:#fffbeb}
 *{box-sizing:border-box}
@@ -127,6 +127,32 @@ tfoot td{font-weight:600;border-bottom:none}
 .tools{display:grid;gap:8px;margin-top:10px}
 .fatal{margin:16px 10px;padding:14px;border-radius:10px;background:#fdecea;color:var(--red);line-height:1.7;font-size:13px}
 #main[hidden],#nameBox[hidden]{display:none}
+.tabs{display:flex;gap:0;background:#fff;border-bottom:1px solid var(--line);padding:0 10px}
+.tab{flex:1;border:none;background:none;padding:10px 6px 8px;font-size:13px;font-family:inherit;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;display:flex;align-items:center;justify-content:center;gap:6px}
+.tab.on{color:var(--navy);font-weight:700;border-bottom-color:var(--navy)}
+.tab .dot{background:var(--red);color:#fff;border-radius:999px;font-size:10px;padding:1px 6px;font-weight:600}
+.tab .dot:empty{display:none}
+#tabQuote[hidden],#tabCase[hidden]{display:none}
+.remind{background:var(--amberbg);border:1px solid #fcd34d;border-radius:8px;padding:7px 9px;font-size:12px;color:#92400e;line-height:1.7;margin:8px 0}
+.remind:empty{display:none}
+.remind a{color:#92400e;cursor:pointer;text-decoration:underline}
+.audit{background:#fff5f5;border-color:#fca5a5;color:var(--red);font-size:12px;line-height:1.7}
+.audit[hidden]{display:none}
+.audit .btn{width:auto;padding:4px 12px;margin-top:6px}
+.li{border:1px solid var(--line);border-radius:8px;padding:7px 10px;margin-bottom:6px;cursor:pointer;background:#fff}
+.li:hover{border-color:var(--navy2);background:#f7faff}
+.li .lt{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.li .lt b{color:var(--text)}
+.li .lc{font-weight:600;margin-top:2px;word-break:break-all}
+.li .ls{font-size:11px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.li .late{color:var(--red);font-size:11px;font-weight:600;margin-top:2px}
+.badge{display:inline-block;padding:1px 8px;border-radius:999px;font-size:11px;font-weight:600;background:#edf2f7;color:var(--muted);white-space:nowrap}
+.b0{background:#ebf4ff;color:#2c5282}
+.b1{background:#fef3c7;color:#92400e}
+.b2{background:#d1fae5;color:#065f46}
+.b3{background:#e5e7eb;color:#6b7280;text-decoration:line-through}
+.acts .btn.case{color:#065f46;border-color:#a7f3d0;background:#ecfdf5}
+.acts .btn.case:hover{background:#d1fae5}
 </style>
 </head><body>
 <div id="bar"></div>
@@ -141,6 +167,43 @@ tfoot td{font-weight:600;border-bottom:none}
 <div id="fatal"></div>
 
 <div id="main" hidden>
+<nav class="tabs">
+  <button class="tab on" data-act="tab" data-tab="quote">🧾 報價單</button>
+  <button class="tab" data-act="tab" data-tab="case">📂 案件 <span class="dot" id="caseDot"></span></button>
+</nav>
+
+<div id="tabCase" hidden>
+<section class="audit" id="caseAudit" hidden></section>
+<section>
+  <h2>案件處理單 <button class="icon" data-act="caserefresh" title="重新整理">⟳</button></h2>
+  <div class="tools" style="margin-top:0">
+    <button class="btn primary" data-act="casewin" title="開啟大視窗：工商案件進度表與案件處理單">📋 開啟工商案件進度表</button>
+    <button class="btn" data-act="casenew">＋ 新案件</button>
+  </div>
+  <div class="remind" id="caseRemind"></div>
+  <div class="chips" id="caseChips" style="margin-top:10px">
+    <button class="chip on" data-act="casef" data-f="mine">我的</button>
+    <button class="chip" data-act="casef" data-f="open">未結案</button>
+    <button class="chip" data-act="casef" data-f="review">待覆核</button>
+  </div>
+  <input class="search" id="cq" placeholder="搜尋案號、公司、委託事項…">
+  <div id="caseList"><div class="muted">載入中…</div></div>
+  <div class="hint">點一件會在大視窗打開。報價回簽後，在「報價單」分頁的歷史紀錄按「📂 建立案件處理單」。</div>
+</section>
+<section>
+  <details>
+    <summary>其他</summary>
+    <div class="tools">
+      <button class="btn" data-act="caseimport" title="把舊的工商案件進度表貼進來">📥 匯入舊進度表</button>
+    </div>
+    <div class="hint" style="margin-top:8px">匯入：第一次按會新增「進度表匯入」分頁；把舊進度表全選（含標題列）複製、貼到那個分頁的 A1，再按一次。有刪除線的案件會標成「作廢」。<br>
+      委託事項代號、其他送件機構、提醒天數、老闆 Email 在「案件設定」分頁修改。<br>
+      請不要直接修改「案件」分頁，請用案件處理單修改。</div>
+  </details>
+</section>
+</div>
+
+<div id="tabQuote">
 <div class="topbar">
   <div class="tb-info" id="cur"></div>
   <div class="tb-btns">
@@ -211,9 +274,10 @@ tfoot td{font-weight:600;border-bottom:none}
   </details>
 </section>
 </div>
+</div>
 
 <div class="pfoot">宥鋐會計師事務所</div>
 
 <div id="toast"></div>
-<script src="taskpane.js?v=mv3b3e3e"></script>
+<script src="taskpane.js?v=mv3cdre6"></script>
 </body></html>
