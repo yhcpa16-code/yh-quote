@@ -7,7 +7,7 @@
 // 有新版就馬上換：GitHub Pages 會讓瀏覽器把這一頁快取 10 分鐘，所以每次打開先讀不快取的 version.json，
 // 版本不同就在網址加上 v＝新版本重新載入（保留 Excel 加在網址上的參數）
 (function(){
-  var mine = 'mv50mk78';
+  var mine = 'mv50n7fo';
   if (mine.indexOf('BUILD') >= 0 || !window.fetch) return; // 本機開發版不檢查
   fetch('version.json', { cache: 'no-store' }).then(function(r){ return r.json(); }).then(function(j){
     if (!j || !j.v || j.v === mine) return;
@@ -19,7 +19,7 @@
 })();
 </script>
 <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
-<script src="config.js?v=mv50mk78"></script>
+<script src="config.js?v=mv50n7fo"></script>
 <style>
 :root{--navy:#1f3a5f;--navy2:#2c5282;--bg:#f4f6f9;--line:#e2e8f0;--text:#2d3748;--muted:#718096;--red:#c53030;--amber:#b45309;--amberbg:#fffbeb}
 *{box-sizing:border-box}
@@ -146,6 +146,9 @@ tfoot td{font-weight:600;border-bottom:none}
 :root{--tabs:42px}
 .tabs{position:sticky;top:0;z-index:6;height:var(--tabs);display:flex;gap:0;background:#fff;border-bottom:1px solid var(--line);padding:0 10px}
 #tabQuote .topbar{top:var(--tabs)}
+.tabset{flex:none;align-self:center;border:1px solid var(--line);background:#fff;border-radius:8px;padding:4px 10px;font-size:12px;font-family:inherit;color:var(--muted);cursor:pointer;white-space:nowrap}
+.tabset:hover{background:#edf2f7;color:var(--text)}
+.tabset.on{background:var(--navy);border-color:var(--navy);color:#fff}
 .tab{flex:1;border:none;background:none;padding:0 6px;height:100%;font-size:13px;font-family:inherit;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;display:flex;align-items:center;justify-content:center;gap:6px}
 .tab.on{color:var(--navy);font-weight:700;border-bottom-color:var(--navy)}
 .tab .dot{background:var(--red);color:#fff;border-radius:999px;font-size:10px;padding:1px 6px;font-weight:600}
@@ -193,6 +196,7 @@ tfoot td{font-weight:600;border-bottom:none}
 <nav class="tabs">
   <button class="tab on" data-act="tab" data-tab="quote">🧾 報價單</button>
   <button class="tab" data-act="tab" data-tab="case">📂 案件 <span class="dot" id="caseDot"></span></button>
+  <button class="tabset" data-act="settingsToggle" id="settingsBtn" title="顯示「服務項目、案件設定、報價／案件編輯紀錄」分頁（平常藏起來）">⚙ 設定</button>
 </nav>
 
 <div id="tabCase" hidden>
@@ -221,7 +225,7 @@ tfoot td{font-weight:600;border-bottom:none}
     </div>
     <div class="ask" id="caseAsk" hidden style="margin:8px 0 0"></div>
     <div class="hint" style="margin-top:8px">匯入：第一次按會新增「進度表匯入」分頁；把舊進度表全選（含標題列）複製、貼到那個分頁的 A1，再按一次。有刪除線的案件會標成「作廢」。<br>
-      委託事項代號、其他送件機構、提醒天數、老闆 Email 在「案件設定」分頁修改（在「🧾 報價單」分頁最下面「其他 → ⚙ 顯示設定與紀錄分頁」叫出來）。<br>
+      委託事項代號、其他送件機構、提醒天數、老闆 Email 在「案件設定」分頁修改（按面板最上面的「⚙ 設定」叫出來）。<br>
       請不要直接修改「案件」分頁，請用案件處理單修改。</div>
   </details>
 </section>
@@ -300,11 +304,10 @@ tfoot td{font-weight:600;border-bottom:none}
       <button class="btn" data-act="goto">📝 跳到我的報價單分頁</button>
       <button class="btn" data-act="rebuild" title="分頁版面亂掉時使用；報價紀錄不受影響">🛠 重建我的報價單分頁</button>
       <button class="btn" data-act="rename" id="renameBtn" hidden>👤 換使用者名字</button>
-      <button class="btn" data-act="settingsToggle" id="settingsBtn" title="服務項目、案件設定、報價／案件編輯紀錄：平常藏起來，要改設定或查紀錄時叫出來">⚙ 顯示設定與紀錄分頁</button>
       <button class="btn" data-act="switchacct" id="switchBtn" hidden title="改用另一個 Microsoft 帳號登入面板">👤 切換 Microsoft 帳號</button>
     </div>
     <div class="hint" style="margin-top:8px">「重建」會清掉分頁上還沒儲存的內容，報價紀錄不受影響。<br>
-      服務項目、常用組合、有效天數、發信人、使用者名字都在「服務項目」工作表修改（平常藏起來，按上面「⚙ 顯示設定與紀錄分頁」叫出來）。</div>
+      服務項目、常用組合、有效天數、發信人、使用者名字都在「服務項目」工作表修改（平常藏起來，按面板最上面的「⚙ 設定」叫出來）。</div>
   </details>
 </section>
 </div>
@@ -313,5 +316,5 @@ tfoot td{font-weight:600;border-bottom:none}
 <div class="pfoot">宥鋐會計師事務所<br><span style="font-size:10px;opacity:.7">版本 115/10/12 16:54</span></div>
 
 <div id="toast"></div>
-<script src="taskpane.js?v=mv50mk78"></script>
+<script src="taskpane.js?v=mv50n7fo"></script>
 </body></html>
