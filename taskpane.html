@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>報價單操作面板</title>
 <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
-<script src="config.js?v=mv4z1uig"></script>
+<script src="config.js?v=mv4z7mdz"></script>
 <style>
 :root{--navy:#1f3a5f;--navy2:#2c5282;--bg:#f4f6f9;--line:#e2e8f0;--text:#2d3748;--muted:#718096;--red:#c53030;--amber:#b45309;--amberbg:#fffbeb}
 *{box-sizing:border-box}
@@ -281,6 +281,7 @@ tfoot td{font-weight:600;border-bottom:none}
       <button class="btn" data-act="goto">📝 跳到我的報價單分頁</button>
       <button class="btn" data-act="rebuild" title="分頁版面亂掉時使用；報價紀錄不受影響">🛠 重建我的報價單分頁</button>
       <button class="btn" data-act="rename" id="renameBtn" hidden>👤 換使用者名字</button>
+      <button class="btn" data-act="switchacct" id="switchBtn" hidden title="改用另一個 Microsoft 帳號登入面板">👤 切換 Microsoft 帳號</button>
     </div>
     <div class="hint" style="margin-top:8px">「重建」會清掉分頁上還沒儲存的內容，報價紀錄不受影響。<br>
       服務項目、常用組合、有效天數、發信人、使用者名字都在「服務項目」工作表修改。</div>
@@ -292,5 +293,5 @@ tfoot td{font-weight:600;border-bottom:none}
 <div class="pfoot">宥鋐會計師事務所</div>
 
 <div id="toast"></div>
-<script src="taskpane.js?v=mv4z1uig"></script>
+<script src="taskpane.js?v=mv4z7mdz"></script>
 </body></html>
