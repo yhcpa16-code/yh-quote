@@ -7,7 +7,7 @@
 // 有新版就馬上換：GitHub Pages 會讓瀏覽器把這一頁快取 10 分鐘，所以每次打開先讀不快取的 version.json，
 // 版本不同就在網址加上 v＝新版本重新載入（保留 Excel 加在網址上的參數）
 (function(){
-  var mine = 'mv4zf012';
+  var mine = 'mv4zidq9';
   if (mine.indexOf('BUILD') >= 0 || !window.fetch) return; // 本機開發版不檢查
   fetch('version.json', { cache: 'no-store' }).then(function(r){ return r.json(); }).then(function(j){
     if (!j || !j.v || j.v === mine) return;
@@ -19,7 +19,7 @@
 })();
 </script>
 <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
-<script src="config.js?v=mv4zf012"></script>
+<script src="config.js?v=mv4zidq9"></script>
 <style>
 :root{--navy:#1f3a5f;--navy2:#2c5282;--bg:#f4f6f9;--line:#e2e8f0;--text:#2d3748;--muted:#718096;--red:#c53030;--amber:#b45309;--amberbg:#fffbeb}
 *{box-sizing:border-box}
@@ -305,8 +305,8 @@ tfoot td{font-weight:600;border-bottom:none}
 </div>
 </div>
 
-<div class="pfoot">宥鋐會計師事務所</div>
+<div class="pfoot">宥鋐會計師事務所<br><span style="font-size:10px;opacity:.7">版本 115/10/12 16:22</span></div>
 
 <div id="toast"></div>
-<script src="taskpane.js?v=mv4zf012"></script>
+<script src="taskpane.js?v=mv4zidq9"></script>
 </body></html>
